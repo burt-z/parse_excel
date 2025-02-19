@@ -1,0 +1,137 @@
+service:
+  name: user_info_server          # 服务名字
+  type: grpc                    # 服务类型 grpc, http, job
+  port: 9020
+  close_timeout: 5s             # 服务关闭等待的时间
+log:
+  level: warn                   # 日志级别
+  output: file                  # 日志输出，std和默认是输出到标准错误，file是输出到文件
+  development: false            # false是生产环境, true为开发环境
+  rotate:                       # 文件切割配置
+    filename: logs/data.log     # 日志输出位置
+    maxage: 30                  # 日志保存最长时间, 天
+    maxsize: 100                # 日志文件最大大小, MiB
+    maxbackups: 3               # 日志最大个数
+    localtime: true             # 使用本地时间切割
+    compress: false             # 文件是否压缩
+etcd:
+  addr: 172.16.112.238:2379,172.16.112.239:2379,172.16.112.240:2379
+monitor:
+  prometheus:
+    addr: :8091
+  pprof:
+    addr: :9000
+db:
+  - name: userinfo_mysql
+    type: mysql
+    host: rm-bp1qqltmj7gv02j2a889.mysql.rds.aliyuncs.com
+    port: 3306
+    user: userinfo_user
+    password: Yd1207@3f6FUpdE
+    database: yidui
+    max_open_conns: 500
+    max_idle_conns: 500
+    conn_max_idle_time: 300s
+    conn_max_lifetime: 1800s
+    conn_timeout: 800ms
+    read_timeout: 800ms
+    write_timeout: 200ms
+    omit_conn_err: true
+    client_type: gorm
+  - name: check_mysql
+    type: mysql
+    host: rds-content-audit-rwnode.rwlb.rds.aliyuncs.com
+    port: 3306
+    user: audit_user
+    password: Yd1207@dnxNyCYq
+    database: content_audit
+    max_open_conns: 500
+    max_idle_conns: 500
+    conn_max_idle_time: 300s
+    conn_max_lifetime: 1800s
+    conn_timeout: 200ms
+    read_timeout: 200ms
+    write_timeout: 200ms
+    client_type: gorm
+  - name: pay_mysql
+    type: mysql
+    host: rds-yidui-wealth.mysql.rds.aliyuncs.com
+    port: 3306
+    user: wealth_user
+    password: Yd1207@Wu66OUlc
+    database: yidui_wealth
+    max_open_conns: 100
+    max_idle_conns: 100
+    conn_max_idle_time: 300s
+    conn_max_lifetime: 1800s
+    conn_timeout: 200ms
+    read_timeout: 200ms
+    write_timeout: 200ms
+    client_type: gorm
+  - name: member_userinfo_mysql
+    type: mysql
+    host: pe-member-info-read.rwlb.rds.aliyuncs.com
+    port: 3306
+    user: memberinfo_user
+    password: Yd1207@GmyQuz9P
+    database: member_cdc
+    max_open_conns: 100
+    max_idle_conns: 100
+    conn_max_idle_time: 300s
+    conn_max_lifetime: 1800s
+    conn_timeout: 200ms
+    read_timeout: 500ms
+    write_timeout: 500ms
+    client_type: gorm
+  - name: single_party_mysql
+    type: mysql
+    host: pc-bp169qgjudmr1jdb2.rwlb.rds.aliyuncs.com
+    port: 3306
+    user: yidui_reader
+    password: Yidui1207!
+    database: yidui_single_party
+    max_open_conns: 100
+    max_idle_conns: 100
+    conn_max_idle_time: 300s
+    conn_max_lifetime: 1800s
+    conn_timeout: 200ms
+    read_timeout: 200ms
+    write_timeout: 200ms
+    client_type: gorm
+  - name: risk_mysql
+    type: mysql
+    host: rm-bp1uzln9r44b167xxrw.mysql.rds.aliyuncs.com
+    port: 3306
+    user: yidui_readonly
+    password: Yd1207re@d
+    database: risk
+    max_open_conns: 400
+    max_idle_conns: 400
+    conn_max_idle_time: 300s
+    conn_max_lifetime: 1800s
+    conn_timeout: 2s
+    read_timeout: 2s
+    write_timeout: 2s
+    client_type: gorm
+redis:
+  - name: userinfo_redis
+    host: redis-predixy-userinfo.db-userinfo
+    port: 7617
+    password: Ms53O6mcGs74eCAN
+    db: 0
+    dial_timeout: 400ms           # 拨号时间
+    read_timeout: 800ms           # 读超时时间
+    write_timeout: 800ms          # 写超时时间
+    max_active: 500                # 最大连接数
+    max_idle: 500                  # 最大空闲连接数
+    idle_timeout: 100s            # 空闲连接回收时间
+    max_conn_lifetime: 1800s      # 连接的有效时间
+    slow_time: 50ms
+env: prod # env：本地local，测试test, 预生产stage，生产prod
+redis_time_used_max: 10
+rpc_time_used_max: 100 #毫秒
+mysql_time_used_max: 20
+support_max_panic_num: 500
+ex_time: 86400
+from_raw: true # true从原始表，false从宽表
+exp: 432000
